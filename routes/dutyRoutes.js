@@ -5,7 +5,8 @@ import {
   getDutiesByEvent, 
   assignDuty, 
   updateDutyStatus, 
-  deleteDuty 
+  deleteDuty,
+  cleanupOrphanedDuties
 } from '../controllers/dutyController.js';
 import { authenticate, authorizeAdmin } from '../middleware/authMiddleware.js';
 
@@ -19,6 +20,7 @@ router.get('/', authenticate, authorizeAdmin, getAllDuties);
 router.get('/event/:eventId', authenticate, authorizeAdmin, getDutiesByEvent);
 router.post('/', authenticate, authorizeAdmin, assignDuty);
 router.delete('/:id', authenticate, authorizeAdmin, deleteDuty);
+router.post('/cleanup', authenticate, authorizeAdmin, cleanupOrphanedDuties);
 
 // Student can update their duty status
 router.put('/:id', authenticate, updateDutyStatus);

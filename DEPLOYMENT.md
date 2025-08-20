@@ -51,12 +51,12 @@ Add these environment variables in Render:
 | `MONGO_URI` | `mongodb+srv://username:password@cluster.mongodb.net/database` | Your MongoDB connection string |
 | `JWT_SECRET` | `your_secret_key_here` | A random string for JWT tokens |
 | `NODE_ENV` | `production` | Environment setting |
-| `CORS_ORIGIN` | `https://your-frontend-domain.com` | Your frontend URL (or `*` for development) |
+| `CORS_ORIGIN` | `https://iustportal.netlify.app` | Your frontend URL (Netlify deployment) |
 
 **Important**: 
 - Replace `username:password` with your actual MongoDB credentials
 - Generate a strong JWT_SECRET (you can use a random string generator)
-- Set CORS_ORIGIN to your frontend domain when deployed
+- CORS_ORIGIN is automatically configured to allow your Netlify frontend
 
 ### 2.4 Deploy
 
@@ -91,6 +91,11 @@ Update your frontend to use the new API URL:
 // In your frontend API configuration
 const API_BASE_URL = 'https://your-service-name.onrender.com/api';
 ```
+
+**Note**: CORS is automatically configured to allow requests from:
+- `https://iustportal.netlify.app` (your deployed frontend)
+- `http://localhost:5173` (local development)
+- Any URL specified in `CORS_ORIGIN` environment variable
 
 ## Step 5: Seed Database (Optional)
 

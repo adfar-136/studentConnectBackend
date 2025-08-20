@@ -17,8 +17,14 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
-  credentials: true
+  origin: [
+    process.env.CORS_ORIGIN || 'http://localhost:5173',
+    'https://iustportal.netlify.app',
+    'https://iustportal.netlify.app/'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

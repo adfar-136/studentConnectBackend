@@ -11,10 +11,15 @@ export const getAllDuties = async (req, res) => {
       .populate('student', 'name email studentId')
       .populate('assignedBy', 'name');
     
+    // Filter out duties with missing references and add safety checks
+    const validDuties = duties.filter(duty => 
+      duty.event && duty.student && duty.assignedBy
+    );
+    
     res.status(200).json({
       success: true,
-      count: duties.length,
-      duties
+      count: validDuties.length,
+      duties: validDuties
     });
   } catch (error) {
     res.status(500).json({
@@ -33,10 +38,15 @@ export const getDutiesByStudent = async (req, res) => {
       .populate('event', 'title date location startTime endTime status')
       .populate('assignedBy', 'name');
     
+    // Filter out duties with missing references
+    const validDuties = duties.filter(duty => 
+      duty.event && duty.assignedBy
+    );
+    
     res.status(200).json({
       success: true,
-      count: duties.length,
-      duties
+      count: validDuties.length,
+      duties: validDuties
     });
   } catch (error) {
     res.status(500).json({
@@ -200,6 +210,44 @@ export const deleteDuty = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to delete duty',
+      error: error.message
+    });
+  }
+};
+
+// Clean up orphaned duties (remove duties with missing references)
+export const cleanupOrphanedDuties = async (req, res) => {
+  try {
+    // Find duties with missing event, student, or assignedBy references
+    const orphanedDuties = await Duty.find({
+      $or: [
+        { event: { $exists: false } },
+        { student: { $exists: false } },
+        { assignedBy: { $exists: false } }
+      ]
+    });
+    
+    if (orphanedDuties.length > 0) {
+      await Duty.deleteMany({
+        _id: { $in: orphanedDuties.map(d => d._id) }
+      });
+      
+      res.status(200).json({
+        success: true,
+        message: `Cleaned up ${orphanedDuties.length} orphaned duties`,
+        cleanedCount: orphanedDuties.length
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: 'No orphaned duties found',
+        cleanedCount: 0
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to cleanup orphaned duties',
       error: error.message
     });
   }
