@@ -17,7 +17,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
   credentials: true
 }));
 app.use(express.json());
@@ -36,8 +36,18 @@ app.get('/', (req, res) => {
   res.send('IUST University Portal API is running');
 });
 
+// Health check endpoint for Render
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    message: 'Server is healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
 // Connect to MongoDB
-const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/iust_portal';
+const mongoUri = process.env.MONGO_URI || 'mongodb+srv://adfarrasheed136:test@cluster0.zi0u3tx.mongodb.net/studentConnect';
 
 
 mongoose
