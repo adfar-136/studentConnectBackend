@@ -12,7 +12,6 @@ export const authenticate = async (req, res, next) => {
         message: 'Authentication failed: No token provided'
       });
     }
-
     // Extract token
     const token = authHeader.split(' ')[1];
     

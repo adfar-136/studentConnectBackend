@@ -23,15 +23,6 @@ export const register = async (req, res) => {
       });
     }
 
-    // Check if student ID already exists
-    const studentIdExists = await User.findOne({ studentId });
-    if (studentIdExists) {
-      return res.status(400).json({
-        success: false,
-        message: 'Student ID already exists'
-      });
-    }
-
     // Create new user
     const user = await User.create({
       name,
