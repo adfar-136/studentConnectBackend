@@ -6,6 +6,7 @@ import {
   updateApplicationStatus, 
   deleteApplication 
 } from '../controllers/applicationController.js';
+
 import { authenticate, authorizeAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();

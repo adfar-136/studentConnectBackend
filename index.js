@@ -8,6 +8,9 @@ import eventRoutes from './routes/eventRoutes.js';
 import faqRoutes from './routes/faqRoutes.js';
 import dutyRoutes from './routes/dutyRoutes.js';
 import applicationRoutes from './routes/applicationRoutes.js';
+import eventProposalRoutes from './routes/eventProposalRoutes.js';
+import dutyRequestRoutes from './routes/dutyRequestRoutes.js';
+import participationRoutes from './routes/participationRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -20,10 +23,10 @@ app.use(cors({
   origin: [
     process.env.CORS_ORIGIN || 'http://localhost:5173',
     'https://iustportal.netlify.app',
-    'https://iustportal.netlify.app/'
+    'https://iustsch.netlify.app'
   ],
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
 }));
 app.use(express.json());
@@ -36,6 +39,9 @@ app.use('/api/events', eventRoutes);
 app.use('/api/faqs', faqRoutes);
 app.use('/api/duties', dutyRoutes);
 app.use('/api/applications', applicationRoutes);
+app.use('/api/event-proposals', eventProposalRoutes);
+app.use('/api/duty-requests', dutyRequestRoutes);
+app.use('/api/participation', participationRoutes);
 
 // Root route
 app.get('/', (req, res) => {

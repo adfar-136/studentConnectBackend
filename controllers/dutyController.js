@@ -1,6 +1,7 @@
 import Duty from '../models/Duty.js';
 import User from '../models/User.js';
 import Event from '../models/Event.js';
+import Participation from '../models/Participation.js';
 
 // Get all duties
 export const getAllDuties = async (req, res) => {
@@ -112,14 +113,24 @@ export const assignDuty = async (req, res) => {
       });
     }
     
-    // Create new duty
+        // Create new duty
     const duty = await Duty.create({
       event: eventId,
       student: studentId,
       role,
       assignedBy: req.user._id
     });
-    
+
+    // Create participation record for council members
+    if (student.isCouncilMember) {
+      await Participation.create({
+        councilMember: studentId,
+        event: eventId,
+        duty: duty._id,
+        status: 'assigned'
+      });
+    }
+
     const populatedDuty = await Duty.findById(duty._id)
       .populate('event', 'title date location')
       .populate('student', 'name email studentId')
